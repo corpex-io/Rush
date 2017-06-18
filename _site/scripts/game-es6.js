@@ -140,7 +140,7 @@ class World extends createjs.Container {
       this.platforms.push(platform);
 
       nextX = platform.x + platform.getBounds().width + Math.random() * gapX;
-      nextX = platform.y + (Math.random() - 0.5) * gapY;
+      nextY = platform.y + (Math.random() - 0.5) * gapY;
 
       this.addChild(platform);
     }
