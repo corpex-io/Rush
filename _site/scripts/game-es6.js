@@ -28,7 +28,7 @@ class MovableGameObject extends GameObject {
   }
 }
 
-class Hero extends GameObject {
+class Hero extends MovableGameObject {
   constructor() {
     super( new lib.HeroGraphic() );
   }
@@ -44,21 +44,16 @@ class World extends createjs.Container {
   constructor() {
     super();
 
+    this.on("tick", this.tick);
+
     // store all platforms
     this.platforms = [];
 
     this.generatePlatforms();
     this.addHero();
-
-    // testing code
-    console.log("y:", this.hero.y, this.isObjectOnGround(this.hero)); //false
-
-    this.hero.y = 200;
-    console.log("y:", this.hero.y, this.isObjectOnGround(this.hero)); //false
-
-    this.hero.y = 290;
-    console.log("y:", this.hero.y, this.isObjectOnGround(this.hero)); //true
-
+  }
+  tick() {
+    this.x -= this.hero.velocity.x;
   }
   addHero() {
     var hero = new Hero();
