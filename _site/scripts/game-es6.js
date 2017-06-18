@@ -16,6 +16,8 @@ class MovableGameObject extends GameObject {
   constructor(graphic) {
     super(graphic);
 
+    this.isOnGround = false;
+
     this.velocity = {
       x: 0,
       y: 0
@@ -33,8 +35,18 @@ class Hero extends MovableGameObject {
     super( new lib.HeroGraphic() );
   }
   run() {
-    this.velocity.x = 2;
-    this.graphic.gotoAndPlay('run');
+    if (!this.isOnGround) {
+      this.velocity.x = 2;
+      this.graphic.gotoAndPlay('run');
+      this.isOnGround = true;
+    }
+  }
+  jump() {
+    if (this.isOnGround) {
+      this.velocity.y = -13;
+      this.graphic.gotoAndPlay('jump');
+      this.isOnGround = false
+    }
   }
 }
 
@@ -98,6 +110,7 @@ class World extends createjs.Container {
     }
     if (this.isObjectOnGround(object) && object.velocity.y > 0) {
       object.velocity.y = 0;
+      object.run();
     }
   }
   isObjectOnGround(object) {
@@ -192,6 +205,10 @@ class Game{
     this.world = new World();
     this.stage.addChild(this.world);
 
+    var hero = this.world.hero;
+    this.stage.on('stagemousedown', function() {
+      hero.jump();
+    });
   }
 
   retinalize() {
