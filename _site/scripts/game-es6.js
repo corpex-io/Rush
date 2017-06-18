@@ -17,8 +17,8 @@ class MovableGameObject extends GameObject {
     super(graphic);
 
     this.velocity = {
-      x: 1,
-      y: 1
+      x: 0,
+      y: 0
     }
     this.on("tick", this.tick);
   }
@@ -52,7 +52,10 @@ class World extends createjs.Container {
     this.generatePlatforms();
     this.addHero();
   }
-  tick() {
+  tick() { // should run at 60FPS
+    this.applyGravity();
+
+    // Focus on the Hero.
     this.x -= this.hero.velocity.x;
   }
   addHero() {
@@ -77,6 +80,21 @@ class World extends createjs.Container {
 
     this.addChild(platform);
   }
+  applyGravity() {
+    var gravity = 1;
+    var terminalVelocity = 5;
+    // TODO: loop all movable game objects
+    var object = this.hero;
+    object.velocity.y += gravity;
+    object.velocity.y = Math.min(object.velocity.y, terminalVelocity);
+
+    if (this.willObjectOnGround(object)) {
+      object.velocity.y = 1;
+    }
+    if (this.isObjectOnGround(object) && object.velocity.y > 0) {
+      object.velocity.y = 0;
+    }
+  }
   isObjectOnGround(object) {
     var objectWidth = object.getBounds().width;
     var objectHeight = object.getBounds().height;
@@ -89,6 +107,25 @@ class World extends createjs.Container {
           object.x < platform.x + platformWidth &&
           object.y + objectHeight >= platform.y &&
           object.y + objectHeight <= platform.y + platformHeight
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+  willObjectOnGround(object) {
+    var objectWidth = object.getBounds().width;
+    var objectHeight = object.getBounds().height;
+    var objectNextY = object.y + objectHeight + object.velocity.y
+
+    for (var platform of this.platforms) {
+      var platformWidth = platform.getBounds().width;
+      var platformHeight = platform.getBounds().height;
+
+      if (object.x >= platform.x &&
+          object.x < platform.x + platformWidth &&
+          objectNextY >= platform.y &&
+          objectNextY <= platform.y + platformHeight
       ) {
         return true;
       }
