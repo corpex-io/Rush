@@ -92,6 +92,7 @@ class World extends createjs.Container {
     this.platforms = [];
 
     this.enemies = [];
+    this.coins = [];
 
     this.generatePlatforms();
     this.addHero();
@@ -108,6 +109,7 @@ class World extends createjs.Container {
     coin.x = 360;
     coin.y = 290;
     this.addChild(coin);
+    this.coins.push(coin);
   }
   tick() { // should run at 60FPS
     this.applyGravity();
@@ -115,6 +117,12 @@ class World extends createjs.Container {
     var hitEnemy = this.targetHitTestObjects(this.hero, this.enemies);
     if (hitEnemy !== false) {
       console.log('hit!', hitEnemy);
+    }
+
+    var hitCoin = this.targetHitTestObjects(this.hero, this.coins);
+    if (hitCoin !== false) {
+      console.log('coin!', hitCoin);
+      this.eatCoin(hitCoin);
     }
 
     // Focus on the Hero.
@@ -141,6 +149,14 @@ class World extends createjs.Container {
     this.platforms.push(platform);
 
     this.addChild(platform);
+  }
+  eatCoin(coin) {
+    for (var i=0; i<this.coins.length; i++) {
+      if (coin === this.coins[i]) {
+        this.coins.splice(i, 1);
+      }
+    }
+    coin.parent.removeChild(coin);
   }
   applyGravity() {
     var gravity = 1;
