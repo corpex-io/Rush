@@ -32,7 +32,7 @@ class MovableGameObject extends GameObject {
 
 class Enemy extends MovableGameObject {
   constructor() {
-    super(new lib.obstacleGraphic);
+    super(new lib.ObstacleGraphic);
 
     this.directionX = -1;
     this.speed = 0.5;
