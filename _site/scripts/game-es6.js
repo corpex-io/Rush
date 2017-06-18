@@ -32,6 +32,10 @@ class Hero extends MovableGameObject {
   constructor() {
     super( new lib.HeroGraphic() );
   }
+  run() {
+    this.velocity.x = 2;
+    this.graphic.gotoAndPlay('run');
+  }
 }
 
 class Platform extends GameObject {
@@ -51,6 +55,7 @@ class World extends createjs.Container {
 
     this.generatePlatforms();
     this.addHero();
+    this.hero.run();
   }
   tick() { // should run at 60FPS
     this.applyGravity();
