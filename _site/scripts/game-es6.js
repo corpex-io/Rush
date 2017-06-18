@@ -33,6 +33,16 @@ class World extends createjs.Container {
 
     this.generatePlatforms();
     this.addHero();
+
+    // testing code
+    console.log("y:", this.hero.y, this.isObjectOnGround(this.hero)); //false
+
+    this.hero.y = 200;
+    console.log("y:", this.hero.y, this.isObjectOnGround(this.hero)); //false
+
+    this.hero.y = 290;
+    console.log("y:", this.hero.y, this.isObjectOnGround(this.hero)); //true
+
   }
   addHero() {
     var hero = new Hero();
@@ -53,8 +63,26 @@ class World extends createjs.Container {
     platform.x = 250;
     platform.y = 300;
     this.platforms.push(platform);
-    // The platform will not appear until we add it to the stage
+
     this.addChild(platform);
+  }
+  isObjectOnGround(object) {
+    var objectWidth = object.getBounds().width;
+    var objectHeight = object.getBounds().height;
+
+    for (var platform of this.platforms) {
+      var platformWidth = platform.getBounds().width;
+      var platformHeight = platform.getBounds().height;
+
+      if (object.x >= platform.x &&
+          object.x < platform.x + platformWidth &&
+          object.y + objectHeight >= platform.y &&
+          object.y + objectHeight <= platform.y + platformHeight
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
