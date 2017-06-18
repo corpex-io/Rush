@@ -156,7 +156,7 @@ class World extends createjs.Container {
     var h2 = object2.getBounds().height;
   
     return (Math.abs(x1 - x2) * 2 < (w1 + w2)) &&
-           (Math.abs(y1 - y2) * 2 < (h1 + h2)) &&
+           (Math.abs(y1 - y2) * 2 < (h1 + h2))
            
   }
   isObjectOnGround(object) {
