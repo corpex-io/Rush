@@ -144,7 +144,7 @@ class World extends createjs.Container {
       object.run();
     }
   }
-  objectHitTest(object) {
+  objectHitTest(object1, object2) {
     var x1 = object1.x;
     var y1 = object1.y;
     var w1 = object1.getBounds().width;
