@@ -85,6 +85,8 @@ class World extends createjs.Container {
     // store all platforms
     this.platforms = [];
 
+    this.enemies = [];
+
     this.generatePlatforms();
     this.addHero();
     this.hero.run();
@@ -94,13 +96,14 @@ class World extends createjs.Container {
     enemy.x = 300;
     enemy.y = 290;
     this.addChild(enemy);
-    this.enemy = enemy;
+    this.enemies.push(enemy);
   }
   tick() { // should run at 60FPS
     this.applyGravity();
 
-    if (this.objectHitTest(this.hero, this.enemy)) {
-      console.log("hit!");
+    var hitEnemy = this.targetHitTestObjects(this.hero, this.enemies);
+    if (hitEnemy !== false) {
+      console.log('hit!', hitEnemy);
     }
 
     // Focus on the Hero.
@@ -143,6 +146,14 @@ class World extends createjs.Container {
       object.velocity.y = 0;
       object.run();
     }
+  }
+  targetHitTestObjects(target, objects) {
+    for (var object of objects) {
+      if (this.objectHitTest(target, object)) {
+        return object;
+      }
+    }
+    return false;
   }
   objectHitTest(object1, object2) {
     var x1 = object1.x;
