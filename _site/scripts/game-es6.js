@@ -12,6 +12,22 @@ class GameObject extends createjs.Container {
   }
 }
 
+class MovableGameObject extends GameObject {
+  constructor(graphic) {
+    super(graphic);
+
+    this.velocity = {
+      x: 1,
+      y: 1
+    }
+    this.on("tick", this.tick);
+  }
+  tick() {
+    this.y += this.velocity.y;
+    this.x += this.velocity.x;
+  }
+}
+
 class Hero extends GameObject {
   constructor() {
     super( new lib.HeroGraphic() );
