@@ -94,9 +94,14 @@ class World extends createjs.Container {
     enemy.x = 300;
     enemy.y = 290;
     this.addChild(enemy);
+    this.enemy = enemy;
   }
   tick() { // should run at 60FPS
     this.applyGravity();
+
+    if (this.objectHitTest(this.hero, this.enemy)) {
+      console.log("hit!");
+    }
 
     // Focus on the Hero.
     this.x -= this.hero.velocity.x;
@@ -138,6 +143,21 @@ class World extends createjs.Container {
       object.velocity.y = 0;
       object.run();
     }
+  }
+  objectHitTest(object) {
+    var x1 = object1.x;
+    var y1 = object1.y;
+    var w1 = object1.getBounds().width;
+    var h1 = object1.getBounds().height;
+
+    var x2 = object2.x;
+    var y2 = object2.y;
+    var w2 = object2.getBounds().width;
+    var h2 = object2.getBounds().height;
+  
+    return (Math.abs(x1 - x2) * 2 < (w1 + w2)) &&
+           (Math.abs(y1 - y2) * 2 < (h1 + h2)) &&
+           
   }
   isObjectOnGround(object) {
     var objectWidth = object.getBounds().width;
