@@ -30,6 +30,12 @@ class MovableGameObject extends GameObject {
   }
 }
 
+class Coin extends GameObject {
+  constructor() {
+    super(new lib.CoinGraphic);
+  }
+}
+
 class Enemy extends MovableGameObject {
   constructor() {
     super(new lib.ObstacleGraphic);
@@ -97,6 +103,11 @@ class World extends createjs.Container {
     enemy.y = 290;
     this.addChild(enemy);
     this.enemies.push(enemy);
+
+    var coin = new Coin();
+    coin.x = 360;
+    coin.y = 290;
+    this.addChild(coin);
   }
   tick() { // should run at 60FPS
     this.applyGravity();
