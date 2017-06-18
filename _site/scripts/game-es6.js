@@ -30,6 +30,26 @@ class MovableGameObject extends GameObject {
   }
 }
 
+class Enemy extends MovableGameObject {
+  constructor() {
+    super(new lib.obstacleGraphic);
+
+    this.directionX = -1;
+    this.speed = 0.5;
+    this.offsetX = 0;
+    this.maxOffset = 10;
+
+    this.on('tick', this.move);
+  }
+  move() {
+    this.velocity.x = this.speed * this.directionX;
+    this.offsetX += this.velocity.x;
+    if (Math.abs(this.offsetX) > this.maxOffset) {
+      this.directionX *= -1;
+    }
+  }
+}
+
 class Hero extends MovableGameObject {
   constructor() {
     super( new lib.HeroGraphic() );
@@ -68,6 +88,12 @@ class World extends createjs.Container {
     this.generatePlatforms();
     this.addHero();
     this.hero.run();
+
+    // testing code
+    var enemy = new Enemy();
+    enemy.x = 300;
+    enemy.y = 290;
+    this.addChild(enemy);
   }
   tick() { // should run at 60FPS
     this.applyGravity();
@@ -202,6 +228,8 @@ class Game{
     }
   }
   restartGame() {
+    // background
+    this.stage.addChild(new lib.BackgroundGraphic());
     this.world = new World();
     this.stage.addChild(this.world);
 
