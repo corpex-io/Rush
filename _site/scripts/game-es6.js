@@ -99,12 +99,6 @@ class World extends createjs.Container {
     this.generateCoins();
     this.addHero();
     this.hero.run();
-
-    var coin = new Coin();
-    coin.x = 360;
-    coin.y = 290;
-    this.addChild(coin);
-    this.coins.push(coin);
   }
   tick() { // should run at 60FPS
     this.applyGravity();
