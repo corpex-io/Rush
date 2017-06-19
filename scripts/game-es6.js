@@ -95,28 +95,17 @@ class World extends createjs.Container {
     this.coins = [];
 
     this.generatePlatforms();
+    this.generateEnemies();
+    this.generateCoins();
     this.addHero();
     this.hero.run();
-
-    // testing code
-    var enemy = new Enemy();
-    enemy.x = 300;
-    enemy.y = 290;
-    this.addChild(enemy);
-    this.enemies.push(enemy);
-
-    var coin = new Coin();
-    coin.x = 360;
-    coin.y = 290;
-    this.addChild(coin);
-    this.coins.push(coin);
   }
   tick() { // should run at 60FPS
     this.applyGravity();
 
     var hitEnemy = this.targetHitTestObjects(this.hero, this.enemies);
     if (hitEnemy !== false) {
-      console.log('hit enemy!', hitEnemy);
+      console.log('hit!', hitEnemy);
     }
 
     var hitCoin = this.targetHitTestObjects(this.hero, this.coins);
@@ -136,19 +125,51 @@ class World extends createjs.Container {
     this.hero = hero;
   }
   generatePlatforms() {
-    var platform = new Platform();
-    platform.x = 100;
-    platform.y = 300;
-    this.platforms.push(platform);
-    this.addChild(platform);
+    var gapX = 40;
+    var gapY = 40;
+    var total = 100;
 
-    // 2nd platform
-    var platform = new Platform();
-    platform.x = 250;
-    platform.y = 300;
-    this.platforms.push(platform);
+    var nextX = 100;
+    var nextY = 200;
 
-    this.addChild(platform);
+    for (var i=0; i<total; i++) {
+      var platform = new Platform();
+      platform.x = nextX;
+      platform.y = nextY;
+
+      this.platforms.push(platform);
+
+      nextX = platform.x + platform.getBounds().width + Math.random() * gapX;
+      nextY = platform.y + (Math.random() - 0.5) * gapY;
+
+      this.addChild(platform);
+    }
+  }
+  generateEnemies() {
+    // skip first two platforms
+    for (var i=2; i<this.platforms.length; i++) {
+      var platform = this.platforms[i];
+      // not every platform needs enemy.
+      if (Math.random() < 0.3) { // ~30% chance
+        var enemy = new Enemy();
+        enemy.x = platform.x + platform.getBounds().width/2;
+        enemy.y = platform.y - enemy.getBounds().height;
+
+        this.addChild(enemy);
+        this.enemies.push(enemy);
+      }
+    }
+  }
+  generateCoins() {
+    for (var platform of this.platforms) {
+      if (Math.random() < 0.8) { // ~80% chance
+        var coin = new Coin();
+        coin.x = platform.x + Math.random() * platform.getBounds().width;
+        coin.y = platform.y - coin.getBounds().height;
+        this.addChild(coin);
+        this.coins.push(coin);
+      }
+    }
   }
   eatCoin(coin) {
     for (var i=0; i<this.coins.length; i++) {

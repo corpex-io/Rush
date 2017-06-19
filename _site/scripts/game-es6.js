@@ -80,6 +80,10 @@ class Platform extends GameObject {
   constructor() {
     super( new lib.PlatformGraphic() );
   }
+  setClippingWidth(width) {
+    this.graphic.instance.mask = new createjs.Shape(new createjs.Graphics().beginFill("#000").drawRect(0,0,width,this.getBounds().height));
+    this.setBounds(this.x, this.y, width, this.getBounds().height);
+  }
 }
 
 class World extends createjs.Container {
@@ -127,6 +131,7 @@ class World extends createjs.Container {
   generatePlatforms() {
     var gapX = 40;
     var gapY = 40;
+    var widthDiff = 50;
     var total = 100;
 
     var nextX = 100;
@@ -136,6 +141,9 @@ class World extends createjs.Container {
       var platform = new Platform();
       platform.x = nextX;
       platform.y = nextY;
+
+      var width = platform.getBounds().width;
+      platform.setClippingWidth( width - Math.random() * widthDiff );
 
       this.platforms.push(platform);
 
