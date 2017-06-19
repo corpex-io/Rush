@@ -1,3 +1,30 @@
+class SceneManager {
+  constructor() {
+    this.menuScene = document.getElementById('menu');
+    this.gameScene = document.getElementById('game-canvas');
+
+    this.startButton = document.getElementById('start-game-button');
+
+    this.handlePlayerClick();
+  }
+  startGame() {
+    this.menuScene.classList.remove('active');
+  }
+  showMenu() {
+    this.menuScene.classList.add('active');
+  }
+  handlePlayerClick() {
+    var manager = this;
+    this.startButton.onclick = function(e) {
+      manager.startGame();
+      game. restartGame();
+
+      e.preventDefault();
+      return false;
+    }
+  }
+}
+
 class LevelData {
   constructor() {
     this.levels = [
@@ -324,6 +351,7 @@ class Game{
     // keep re-drawing the stage.
     createjs.Ticker.on("tick", this.stage);
 
+    this.gameLoaded = false;
     this.loadGraphics();
   }
   version(){
@@ -347,7 +375,8 @@ class Game{
     	var queue = evt.target;
     	ss["rush_game_graphics_atlas_"] = queue.getResult("rush_game_graphics_atlas_");
 
-      this.restartGame();
+
+      this.gameLoaded = true;
     }
   }
   restartGame() {
@@ -384,3 +413,5 @@ class Game{
 
 // start the game
 var game = new Game();
+
+var sceneManager = new SceneManager();
