@@ -198,7 +198,7 @@ class World extends createjs.Container {
       console.log(this.scoreCalculator.score);
     }
 
-    // is fero falling outside of screen?
+    // is hero falling outside of screen?
     if (this.hero.y > game.stage.height) {
       game.gameOver();
     }
