@@ -1,0 +1,3 @@
+before gameOver is called, the game needs to be paused
+somehow because the character running off a platform causes
+gameOver to execute after gameOver has already executed.
