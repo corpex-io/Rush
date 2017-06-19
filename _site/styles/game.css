@@ -3,7 +3,7 @@
 }
 
 #game {
-  position: relative;
+  /*position: relative;*/
   width: 480px;
   height: 320px;
   overflow: hidden;
