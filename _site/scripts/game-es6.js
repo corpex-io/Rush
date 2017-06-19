@@ -17,7 +17,7 @@ class SceneManager {
     var manager = this;
     this.startButton.onclick = function(e) {
       manager.startGame();
-      game. restartGame();
+      game.restartGame();
 
       e.preventDefault();
       return false;
@@ -374,7 +374,6 @@ class Game{
     function handleComplete(evt) {
     	var queue = evt.target;
     	ss["rush_game_graphics_atlas_"] = queue.getResult("rush_game_graphics_atlas_");
-
 
       this.gameLoaded = true;
     }
