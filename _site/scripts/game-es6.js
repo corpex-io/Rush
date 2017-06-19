@@ -2,20 +2,43 @@ class SceneManager {
   constructor() {
     this.menuScene = document.getElementById('menu');
     this.gameScene = document.getElementById('game-canvas');
+    this.gameOverScene = document.getElementById('gameover')
 
     this.startButton = document.getElementById('start-game-button');
+    this.restartButton = document.getElementById('restart-game-button');
+    this.exitButton = document.getElementById('exit-button');
 
     this.handlePlayerClick();
   }
   startGame() {
     this.menuScene.classList.remove('active');
+    this.gameOverScene.classList.remove('active');
   }
   showMenu() {
+    this.gameOverScene.classList.remove('active');
     this.menuScene.classList.add('active');
+  }
+  gameOver() {
+    this.gameOverScene.classList.add('active');
   }
   handlePlayerClick() {
     var manager = this;
     this.startButton.onclick = function(e) {
+      manager.startGame();
+      game.restartGame();
+
+      e.preventDefault();
+      return false;
+    }
+
+    this.exitButton.onclick = function(e) {
+      manager.showMenu();
+
+      e.preventDefault();
+      return false;
+    }
+
+    this.restartButton.onclick = function(e) {
       manager.startGame();
       game.restartGame();
 
@@ -164,6 +187,7 @@ class World extends createjs.Container {
     var hitEnemy = this.targetHitTestObjects(this.hero, this.enemies);
     if (hitEnemy !== false) {
       console.log('hit!', hitEnemy);
+      game.gameOver();
     }
 
     var hitCoin = this.targetHitTestObjects(this.hero, this.coins);
@@ -172,6 +196,11 @@ class World extends createjs.Container {
       this.eatCoin(hitCoin);
       this.scoreCalculator.increaseScore(this.currentLevel);
       console.log(this.scoreCalculator.score);
+    }
+
+    // is fero falling outside of screen?
+    if (this.hero.y > game.stage.height) {
+      game.gameOver();
     }
 
     // Focus on the Hero.
@@ -379,8 +408,11 @@ class Game{
     }
   }
   restartGame() {
+    this.stage.removeAllChildren();
+
     // background
     this.stage.addChild(new lib.BackgroundGraphic());
+
     this.world = new World();
     this.stage.addChild(this.world);
 
@@ -388,6 +420,9 @@ class Game{
     this.stage.on('stagemousedown', function() {
       hero.jump();
     });
+  }
+  gameOver() {
+    sceneManager.gameOver();
   }
 
   retinalize() {
