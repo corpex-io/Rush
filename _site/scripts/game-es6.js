@@ -10,6 +10,17 @@ class LevelData {
   }
 }
 
+class ScoreCalculator {
+  constructor() {
+    this.score = 0;
+  }
+  increaseScore(level) {
+    // Note: level starts at 0. Exponential incrementation.
+    this.score += (level+1) * (level+1);
+
+  }
+}
+
 class GameObject extends createjs.Container {
   constructor(graphic) {
     super();
@@ -103,6 +114,8 @@ class World extends createjs.Container {
     super();
 
     this.levelData = new LevelData();
+    this.scoreCalculator = new ScoreCalculator();
+    this.currentLevel = 0;
 
     this.on("tick", this.tick);
 
@@ -130,6 +143,8 @@ class World extends createjs.Container {
     if (hitCoin !== false) {
       console.log('coin!', hitCoin);
       this.eatCoin(hitCoin);
+      this.scoreCalculator.increaseScore(this.currentLevel);
+      console.log(this.scoreCalculator.score);
     }
 
     // Focus on the Hero.
@@ -217,7 +232,9 @@ class World extends createjs.Container {
     if (this.willObjectOnGround(object)) {
       object.velocity.y = 1;
     }
+    var platform = this.isObjectOnGround(object);
     if (this.isObjectOnGround(object) && object.velocity.y > 0) {
+      this.currentLevel = platform.levelNumber;
       object.velocity.y = 0;
       object.run();
     }
@@ -258,7 +275,7 @@ class World extends createjs.Container {
           object.y + objectHeight >= platform.y &&
           object.y + objectHeight <= platform.y + platformHeight
       ) {
-        return true;
+        return platform;
       }
     }
     return false;
