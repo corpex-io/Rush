@@ -199,9 +199,9 @@ class World extends createjs.Container {
     }
 
     // is hero falling outside of screen?
-    if (this.hero.y > game.stage.height) {
-      game.gameOver();
-    }
+    // if (this.hero.y > game.stage.height) {
+    //   game.gameOver();
+    // }
 
     // Focus on the Hero.
     this.x -= this.hero.velocity.x;
