@@ -1,3 +1,15 @@
+class LevelData {
+  constructor() {
+    this.levels = [
+      {gapX:0, gapY:30, widthDiff: 0, total: 5, coinChance: 0.4, enemyChance: 0.2},
+      {gapX:10, gapY:30, widthDiff: 30, total: 10, coinChance: 0.6, enemyChance: 0.3},
+      {gapX:20, gapY:30, widthDiff: 30, total: 10, coinChance: 0.6, enemyChance: 0.2},
+      {gapX:40, gapY:40, widthDiff: 100, total: 50, coinChance: 0.8, enemyChance: 0},
+      {gapX:20, gapY:30, widthDiff: 30, total: 100, coinChance: 0.6, enemyChance: 0.4}
+    ];
+  }
+}
+
 class GameObject extends createjs.Container {
   constructor(graphic) {
     super();
@@ -90,6 +102,8 @@ class World extends createjs.Container {
   constructor() {
     super();
 
+    this.levelData = new LevelData();
+
     this.on("tick", this.tick);
 
     // store all platforms
@@ -129,36 +143,39 @@ class World extends createjs.Container {
     this.hero = hero;
   }
   generatePlatforms() {
-    var gapX = 40;
-    var gapY = 40;
-    var widthDiff = 50;
-    var total = 100;
-
     var nextX = 100;
     var nextY = 200;
 
-    for (var i=0; i<total; i++) {
-      var platform = new Platform();
-      platform.x = nextX;
-      platform.y = nextY;
+    var levelNumber = 0;
+    for (var level of this.levelData.levels) {
+      for (var i=0; i<level.total; i++) {
+        var platform = new Platform();
+        platform.x = nextX;
+        platform.y = nextY;
 
-      var width = platform.getBounds().width;
-      platform.setClippingWidth( width - Math.random() * widthDiff );
+        var width = platform.getBounds().width;
+        platform.setClippingWidth( width - Math.random() * level.widthDiff );
 
-      this.platforms.push(platform);
+        platform.levelNumber = levelNumber;
 
-      nextX = platform.x + platform.getBounds().width + Math.random() * gapX;
-      nextY = platform.y + (Math.random() - 0.5) * gapY;
+        this.platforms.push(platform);
 
-      this.addChild(platform);
+        nextX = platform.x + platform.getBounds().width + Math.random() * level.gapX;
+        nextY = platform.y + (Math.random() - 0.5) * level.gapY;
+
+        this.addChild(platform);
+      }
+      levelNumber += 1;
     }
   }
   generateEnemies() {
     // skip first two platforms
     for (var i=2; i<this.platforms.length; i++) {
       var platform = this.platforms[i];
+      var levelNumber = platform.levelNumber;
+      var chance = this.levelData.levels[levelNumber].enemyChance;
       // not every platform needs enemy.
-      if (Math.random() < 0.3) { // ~30% chance
+      if (Math.random() < chance) {
         var enemy = new Enemy();
         enemy.x = platform.x + platform.getBounds().width/2;
         enemy.y = platform.y - enemy.getBounds().height;
@@ -170,7 +187,9 @@ class World extends createjs.Container {
   }
   generateCoins() {
     for (var platform of this.platforms) {
-      if (Math.random() < 0.8) { // ~80% chance
+      var levelNumber = platform.levelNumber;
+      var chance = this.levelData.levels[levelNumber].coinChance;
+      if (Math.random() < chance) {
         var coin = new Coin();
         coin.x = platform.x + Math.random() * platform.getBounds().width;
         coin.y = platform.y - coin.getBounds().height;
