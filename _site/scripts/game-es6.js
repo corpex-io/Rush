@@ -15,7 +15,7 @@ class SceneManager {
   }
   handlePlayerClick() {
     var manager = this;
-    this.startButton.onclick = function(e) {
+    this.startButton.onClick = function(e) {
       manager.startGame();
       game.restartGame();
 
