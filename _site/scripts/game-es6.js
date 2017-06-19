@@ -201,7 +201,7 @@ class World extends createjs.Container {
     var hitEnemy = this.targetHitTestObjects(this.hero, this.enemies);
     if (hitEnemy !== false) {
       console.log('hit!', hitEnemy);
-      game.gameOver();
+      // game.gameOver();
     }
 
     var hitCoin = this.targetHitTestObjects(this.hero, this.coins);
