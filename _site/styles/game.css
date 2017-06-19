@@ -35,3 +35,15 @@
 .scene a:hover {
   background: #466B6A;
 }
+
+/* Game Score */
+#hud.scene {
+  opacity: 0;
+  transform: none;
+  background: none;
+  transition: opacity 0.3s ease-out;
+  pointer-events: none;
+}
+#hud.active.scene {
+  opacity: 1;
+}
